@@ -1,0 +1,37 @@
+.dashboard-container {
+  width: 100%;
+}
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.headerColor {
+  color: #383636d9;
+}
+
+.graph {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+.graph-active,
+.graph-zavrsni,
+.graph-kopmanija,
+.graph-korisnici {
+  /* position: relative; */
+  max-height: 420px;
+  border: 3px solid #7360f2;
+  border-radius: 3px;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 1025px) {
+  .graph {
+    justify-content: center;
+  }
+}

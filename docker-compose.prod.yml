@@ -1,0 +1,14 @@
+version: "3.3"
+
+services:
+  app:
+    container_name: transport-front-prod
+    image: transport-front-prod
+    build:
+      context: .
+      #target: production
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - 61320:80

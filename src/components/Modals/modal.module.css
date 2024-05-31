@@ -1,0 +1,45 @@
+#startDestination{
+    padding: 16px 24px;
+}
+
+#startDestination .header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header .title{
+    font-size: 24px;
+    margin-bottom: 4px;
+    margin-right: 10px;
+}
+
+.header .count{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#startDestination .item{
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+#startDestination .itemTitle{
+    /* margin-bottom: 0px; */
+    opacity: .6;
+}
+
+#startDestination .item .infoWrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#startDestination .item .info{
+    margin-bottom: 0;
+    font-size: 18px;
+}

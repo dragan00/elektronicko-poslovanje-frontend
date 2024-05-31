@@ -1,0 +1,366 @@
+#basic {
+  position: relative;
+}
+
+.basicInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 14px;
+  height: 48px;
+  border-radius: 3px;
+  z-index: 2;
+  border: 1px solid #909090;
+  background-color: transparent;
+}
+
+.basicLabel {
+  position: absolute;
+  padding: 2px 8px;
+  top: 12px;
+  left: 12px;
+  background-color: #fff;
+  transition: 250ms ease;
+  color: #909090;
+  z-index: 1;
+  border-radius: 3px;
+  user-select: none;
+  cursor: text;
+}
+
+input[type="password"] {
+  font-family: caption;
+}
+
+.basicInput:focus + .basicLabel {
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 2;
+}
+
+.basicInput:focus {
+  border-color: #7360f2 !important;
+}
+
+.basicInput:focus:not([value=""]) + .basicLabel {
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 2;
+}
+
+.basicInput:not(:focus):not([value=""]) {
+  border-color: #909090 !important;
+}
+
+.basicInput:not(:focus):not([value=""]) + .basicLabel {
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 2;
+}
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#multiple {
+  position: relative;
+  height: max-content;
+}
+
+#multiple .icon {
+  height: 22px;
+  width: 22px;
+  border-radius: 3px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#multiple .flexRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputMockup {
+  width: calc(100vw - 64px);
+  /* max-width: 400px; */
+  padding-top: 10px;
+  border-radius: 3px;
+  z-index: 2;
+  border: 1px solid #909090;
+  background-color: transparent;
+  transition: 250ms ease;
+}
+
+.multipleLabel {
+  padding: 0px 8px;
+  transition: 250ms ease;
+  color: #909090;
+  background-color: #fff;
+  padding: 2px 8px;
+  transition: 250ms ease;
+  z-index: 1;
+  margin: 0;
+}
+
+.multipleLabelCount {
+  padding: 0px 8px;
+  transition: 250ms ease;
+  color: #434343;
+  background-color: #fff;
+  padding: 2px 8px;
+  transition: 250ms ease;
+  z-index: 1;
+  margin: 0;
+  position: absolute;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.formDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: stretch;
+  padding: 8px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.formIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.collapseArrow {
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.addNewField {
+  position: absolute;
+  top: 20px;
+  right: 36px;
+}
+
+.removeField {
+  position: absolute;
+  top: 20px;
+  right: 5px;
+}
+
+.formInput {
+  width: 100%;
+  margin-top: 16px;
+  padding: 2px 8px;
+  border: none;
+  border-bottom: 1px solid #d0cfd2;
+}
+
+.formInput::placeholder {
+  color: #d0cfd2;
+}
+
+.values {
+  width: 100%;
+}
+
+.values .flexRow {
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  box-sizing: border-box;
+  padding-right: 10px;
+}
+
+.value {
+  text-align: left;
+  color: #909090;
+  box-sizing: border-box;
+  padding-left: 40px;
+  margin: 6px 0;
+  flex: 1;
+}
+
+.addDocument {
+  position: absolute;
+  top: 20px;
+  right: 36px;
+}
+
+.addDocumentLabel {
+  padding-top: 40px;
+  color: #909090;
+  transition: 250ms ease;
+}
+
+#search {
+  position: relative;
+  min-width: 200px;
+  width: 100%;
+  max-width: calc(50vw - 240px);
+}
+
+.searchInput,
+.searchInputMobile {
+  width: 100%;
+  padding: 14px;
+  padding-top: 16px;
+  border-radius: 3px;
+  z-index: 2;
+  border: 1px solid #d0cfd2;
+  background-color: transparent;
+  padding-left: 48px;
+}
+
+.searchInput::placeholder,
+.searchInputMobile::placeholder {
+  font-family: "Pier Sans", sans-serif;
+  color: #d0cfd2;
+}
+
+.searchIcon,
+.closeIcon {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.closeIcon {
+  left: unset;
+  right: 18px;
+  width: 28px;
+  height: 28px;
+  top: 10px;
+}
+
+#searchMobile {
+  position: relative;
+  min-width: max-content;
+  width: 100%;
+  height: 48px;
+  border-radius: 50%;
+}
+
+#searchMobile .searchIcon {
+  top: 15px;
+  left: 15px;
+  user-select: none;
+}
+
+.searchInputMobile {
+  width: 81%;
+  height: 48px;
+  padding: 0;
+  transition: 250ms ease;
+}
+
+.searchInputMobile:focus {
+  width: 100%;
+  padding-left: 40px;
+  transition: 250ms ease;
+}
+
+.searchInputMobile:not(:focus)::placeholder {
+  width: 0px;
+  transition: 250ms ease;
+}
+
+.filterInput {
+  width: 100%;
+  min-width: 106px;
+  box-sizing: border-box;
+  padding: 7px;
+  border-radius: 3px;
+  z-index: 2;
+  border: 1px solid #d9d9d9;
+  background-color: transparent;
+}
+.textArea {
+  width: 100%;
+  min-height: 66px;
+  padding: 10px;
+  border: 1px solid #d0cfd2;
+}
+.filterInput {
+  min-height: 39px;
+}
+
+.filterLabel,
+.textAreaLabel {
+  position: absolute;
+  padding: 2px 8px;
+  top: 10px;
+  left: 4px;
+  background-color: #fff;
+  transition: 250ms ease;
+  color: #bfbfbf;
+  z-index: 1;
+  border-radius: 3px;
+  user-select: none;
+  white-space: nowrap;
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: text;
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 2;
+}
+
+.textAreaLabel {
+  width: max-content;
+}
+
+input[type="password"] {
+  font-family: caption;
+}
+/* 
+.filterInput:focus + .filterLabel,
+.textArea:focus + .textAreaLabel {
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 2;
+}
+
+.filterInput:focus,
+.textArea:focus {
+  border-color: #7360f2 !important;
+}
+
+.filterInput:not(:focus):not([value=""]),
+.textArea:not(:focus):not([value=""]) {
+  border-color: #909090 !important;
+}
+
+.filterInput:focus:not([value=""]) + .filterLabel,
+.textArea:focus:not([value=""]) + .textAreaLabel {
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 2;
+}
+
+.filterInput:not(:focus):not([value=""]) + .filterLabel,
+.textArea:not(:focus):not([value=""]) + .textAreaLabel {
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 2;
+} */

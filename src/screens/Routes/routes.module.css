@@ -1,0 +1,164 @@
+#profile{
+    width: 100%;
+    height: 100;
+    overflow-y: auto;
+}
+
+#routes{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+#cargo{
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    padding: 6px 0;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+@media only screen and (max-width: 1200px) {
+    #cargo{
+        padding: 0px;
+    }
+}
+
+.CTARow, .CTARowDesktop{
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+.CTARowDesktop{
+    justify-content: flex-end;
+}
+
+@media only screen and (min-width: 1200px) {
+    .filterWrapContainer{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .CTARow{
+        width: 400px;
+    }
+}
+
+.CTARowFilter{
+    right: -10%;
+    top: 140px;
+    z-index: 1;
+
+}
+
+@media only screen and (max-width: 1200px) {
+    .CTARowDesktop{
+        flex-direction: column;
+    }
+}
+
+.flexRow{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: stretch;
+    position: relative;
+}
+
+.flexRowFilters{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+}
+
+
+.countries, .date{
+    padding: 0;
+    margin: 0;
+    margin-left: 10px;
+    font-weight: 500;
+    width: max-content;
+}
+
+.moreTagsContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.moreTagsContainer:last-child{
+    margin-bottom: 0;
+}
+
+.moreTagsContainer .city{
+    font-size: 18px;
+    margin-bottom: 0;
+    color: #434343;
+}
+
+.moreTagsContainer .country{
+    font-size: 12px;
+    font-weight: 200;
+    color: #909090;
+}
+
+#modalContainer{
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+#modalContainer ::-webkit-scrollbar {
+    height: 0px !important;               /* width of the entire scrollbar */
+}
+
+
+
+
+#warehouses{
+    width: 100%;
+    height: 100%;
+    padding: 6px 0;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    /* overflow-y: auto; */
+}
+
+@media only screen and (max-width: 1200px) {
+    #warehouses{
+        margin-top: 0px !important;
+    }
+}
+
+.flexRowFilters{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+}
+
+.flexRowSpaceBetween{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}

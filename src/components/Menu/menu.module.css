@@ -1,0 +1,85 @@
+#avatar .menu{
+    display: flex;
+    flex-direction: column;
+}
+
+#avatar .menuItem{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px 24px;
+    transition: 250ms ease;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#avatar .menuItem:hover{
+    background-color: #E6E6E680;
+    transition: 250ms ease;
+}
+
+#avatar .menuItemIcon{
+    width: 20px;
+    height: 20px;
+}
+
+#avatar .menuItemText{
+    margin: 0;
+    margin-left: 20px;
+    margin-right: 20px;
+    color: #434343;
+    font-weight: 500;
+}
+
+#avatar .form{
+    padding: 10px;
+    transition: 250ms ease;
+}
+
+#avatar .formAction{
+    color: #434343;
+    margin-bottom: 0;
+    font-size: 18px;
+}
+
+#avatar .form .header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+#avatar .form .header::after{
+    content: '';
+    position: absolute;
+    width: calc(100% + 48px);
+    height: 1px;
+    bottom: -20px;
+    left: -24px;
+    background-color: #D0CFD280;
+}
+
+#avatar .header .user{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f3ecff;
+    padding: 4px 8px;
+    border-radius: 3px;
+}
+
+#avatar .user .userImage{
+    width: 16px;
+    height: 16px;
+}
+
+#avatar .user .userName{
+    margin: 0;
+    margin-left: 6px;
+    font-size: 12px;
+    color: #70CF97;
+}

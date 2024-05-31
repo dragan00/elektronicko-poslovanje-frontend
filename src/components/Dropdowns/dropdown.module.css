@@ -1,0 +1,41 @@
+#basic {
+  width: 120px;
+  min-width: 120px;
+}
+
+.option {
+  color: #434343;
+  font-weight: 500;
+  padding: 8px 12px;
+}
+
+.allCountries {
+  /* width: 66, marginLeft: 20, height: 46, borderRadius: 10, padding: "auto 1px !important" */
+  width: 39px;
+  height: 39px;
+  margin-left: 20px;
+  border-radius: 3px;
+}
+
+.filterLabel {
+  position: absolute;
+  padding: 2px 3px;
+
+  top: 10px;
+  left: 4px;
+  background-color: transparent;
+  transition: 250ms ease;
+  color: #bfbfbf;
+  z-index: 1;
+  border-radius: 3px;
+  user-select: none;
+  white-space: nowrap;
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Active */
+  top: -15px !important;
+  transition: 250ms ease;
+  color: #7360f2 !important;
+  z-index: 21;
+}

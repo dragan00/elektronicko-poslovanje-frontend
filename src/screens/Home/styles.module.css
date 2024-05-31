@@ -1,0 +1,249 @@
+.container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-bottom: 0 !important;
+    position: relative;
+}
+
+.wrapper{
+    width: 100%;
+    max-width: 992px;
+    height: min-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.boxContainer{
+    width: 100%;
+    margin-top: 40px;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+
+.boxWrapper{
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    position: relative;
+    border: 1px solid #dedede;
+    border-radius: 3px;
+}
+
+.box{
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    transition: 250ms ease;
+}
+
+.boxWrapper:hover{
+    border: 1px solid #7360f2;
+    transition: 250ms ease;
+}
+
+
+.box .label, 
+.box .value{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.box .label{
+    opacity: .65;
+    font-size: 16px;
+    padding: 0 10px
+}
+
+.box .value{
+    font-size: 52px;
+    color: #7360f2;
+    /* text-decoration: underline; */
+}
+
+
+
+
+
+
+.cards{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+
+
+
+.companyCard{
+    width: 50%;
+    background-color: #F1F0FE;
+    height: 120px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 250ms ease;
+}
+
+.companyCard .logo{
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    right: 20px;
+    z-index: 7;
+    top: calc(50% - 40px);
+}
+
+.informations{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 16px 32px;
+    z-index: 9;
+}
+
+
+.informations .label, 
+.informations .name{
+    margin: 0;
+    padding: 0;
+    z-index: 9;
+}
+
+.informations .label{
+    opacity: .65;
+    margin-top: 18px;
+    margin-bottom: -8px;
+    color: #909090;
+}
+
+.informations .name{
+    color: #7360f2;
+}
+
+.decorationLeft{
+    width: 40px;
+    height: 40px;
+    z-index: 6;
+    background-color: #E4E1FE;
+    position: absolute;
+    bottom: -16px;
+    left: -16px;
+    transform: rotateZ(-30deg);
+    transition: 250ms ease;
+}
+
+.decorationRight{
+    width: 120px;
+    height: 120px;
+    z-index: 6;
+    background-color: #E4E1FE;
+    position: absolute;
+    top: -80px;
+    right: -20px;
+    transform: rotateZ(-45deg);
+    transition: 250ms ease;
+}
+
+.companyCard:hover{
+    background-color: #E4E1FEaa;
+    transition: 250ms ease;
+}
+
+.companyCard:hover > .decorationRight{
+    width: 140px;
+    height: 140px;
+    background-color: #D8D2FE;
+    top: -80px;
+    right: -20px;
+    transform: rotateZ(-30deg);
+    transition: 250ms ease;
+}
+
+.companyCard:hover > .decorationLeft{
+    width: 80px;
+    height: 80px;
+    background-color: #D8D2FE;
+    position: absolute;
+    bottom: -60px;
+    left: -16px;
+    transform: rotateZ(-45deg);
+    transition: 250ms ease;
+}
+
+
+
+
+
+
+
+.userCard{
+    width: max-content;
+    height: 120px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.userCard .informations .label{
+    margin-top: 4px;
+}
+
+.userIcon{
+    width: 68px;
+    height: 68px;
+}
+
+
+
+
+@media only screen and (max-width: 992px) {
+    .cards{
+        flex-direction: column-reverse;
+    }
+    .companyCard{
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .userCard{
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .informations .name{
+        font-size: 24px;
+    }
+    .informations .label{
+        margin-bottom: -2px;
+    }
+    .wrapper{
+        gap: 20px;
+    }    
+    .boxContainer{
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+    }
+    .box .value{
+        font-size: 40px;
+    }
+    .box .label{
+        font-size: 14px;
+    }
+}
