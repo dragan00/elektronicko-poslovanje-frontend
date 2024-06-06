@@ -6,7 +6,7 @@ services:
     image: transport-dev
     build:
       context: .
-      target: development
+      # target: development
     volumes:
       - ./src:/app/src
     ports:
