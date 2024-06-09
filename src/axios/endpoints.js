@@ -22,7 +22,7 @@ export const getApiEndpoint = () => {
 
   // PRODUCTION
   else if (deploy === "PRODUCTION") {
-    return "https://http://fakultet.api.elektronickoposlovanje.neuros.hr/api/";
+    return "https://fakultet.api.elektronickoposlovanje.neuros.hr/api/";
   }
 
   // DRAGAN
