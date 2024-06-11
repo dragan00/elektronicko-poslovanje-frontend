@@ -148,11 +148,11 @@ body {
   }
 
   ::-webkit-scrollbar-track {
-    background: #f3ecff; /* color of the tracking area */
+    background: #fff1ed; /* color of the tracking area */
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #7360f2; /* color of the scroll thumb */
+    background-color: #f27b60; /* color of the scroll thumb */
     border-radius: 4px; /* roundness of the scroll thumb */
   }
 }
@@ -170,7 +170,7 @@ body {
 }
 
 #header {
-  background-color: #7360f2;
+  background-color: #f27b60;
   border-bottom: 1px solid #e8e7e9;
   padding-left: 0;
   padding-right: 20px;
@@ -196,7 +196,7 @@ body {
   font-size: 16px;
   color: #fff;
   width: 240px;
-  border-right: 1px solid #f3ecff40;
+  border-right: 1px solid #fff1ed40;
   padding: 0 20px;
   transition: 200ms ease;
   display: flex;
@@ -358,7 +358,7 @@ html {
 
 .dadada .ant-form-item-label label,
 .FormUpdateCompanyWraper .ant-form-item-label label {
-  color: #7360f2;
+  color: #f27b60;
   white-space: nowrap !important;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -487,12 +487,12 @@ html {
 .ant-menu-vertical-left .ant-menu-item::after,
 .ant-menu-vertical-right .ant-menu-item::after,
 .ant-menu-inline .ant-menu-item::after {
-  border-right-color: #7360f2 !important;
+  border-right-color: #f27b60 !important;
 }
 
 .ant-menu-item:active,
 .ant-menu-submenu-title:active {
-  background: #f3ecff !important;
+  background: #fff1ed !important;
 }
 
 /* Upload */
@@ -562,7 +562,7 @@ html {
 }
 
 .ant-collapse-header {
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   font-size: 16px;
   font-weight: 500;
   padding: 12px 0 !important;
@@ -654,7 +654,7 @@ html {
 
 #main-tabs .ant-tabs-tab-active a,
 #dynamic-tabs .ant-tabs-tab-active a {
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   font-weight: 500;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -772,12 +772,12 @@ html {
 
 #dynamic-tabs .ant-tabs-tab-with-remove,
 #dynamic-tabs .ant-tabs-tab {
-  background-color: #f3ecff;
+  background-color: #fff1ed;
 }
 
 #dynamic-tabs .ant-tabs-tab-with-remove.ant-tabs-tab-active,
 #dynamic-tabs .ant-tabs-tab.ant-tabs-tab-active {
-  background-color: #7360f2 !important;
+  background-color: #f27b60 !important;
 }
 
 #dynamic-tabs .ant-tabs-tab-with-remove.ant-tabs-tab-active div,
@@ -818,7 +818,7 @@ html {
 }
 
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
-  border-color: #7360f2 !important;
+  border-color: #f27b60 !important;
 }
 
 .ant-select-selection-overflow-item .ant-select-selection-item {
@@ -1310,7 +1310,7 @@ html,
 }
 
 #dynamic-tabs .ant-tabs-tab-active .tab-item {
-  color: #7360f2 !important;
+  color: #f27b60 !important;
 }
 
 .ant-tabs-tab .tab-item {

@@ -2,7 +2,7 @@ import React, { memo } from "react";
 
 const UnderCardTitleBorder = ({title}) => {
   return (
-    <span style={{ borderBottom: "2px solid #7360f2", paddingRight: 12 }}>
+    <span style={{ borderBottom: "2px solid #f27b60", paddingRight: 12 }}>
       {title}
     </span>
   );

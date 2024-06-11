@@ -34,18 +34,18 @@ input[type="password"] {
 .basicInput:focus + .basicLabel {
   top: -15px !important;
   transition: 250ms ease;
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   z-index: 2;
 }
 
 .basicInput:focus {
-  border-color: #7360f2 !important;
+  border-color: #f27b60 !important;
 }
 
 .basicInput:focus:not([value=""]) + .basicLabel {
   top: -15px !important;
   transition: 250ms ease;
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   z-index: 2;
 }
 
@@ -56,7 +56,7 @@ input[type="password"] {
 .basicInput:not(:focus):not([value=""]) + .basicLabel {
   top: -15px !important;
   transition: 250ms ease;
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   z-index: 2;
 }
 
@@ -319,7 +319,7 @@ input[type="password"] {
   cursor: text;
   top: -15px !important;
   transition: 250ms ease;
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   z-index: 2;
 }
 
@@ -335,13 +335,13 @@ input[type="password"] {
 .textArea:focus + .textAreaLabel {
   top: -15px !important;
   transition: 250ms ease;
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   z-index: 2;
 }
 
 .filterInput:focus,
 .textArea:focus {
-  border-color: #7360f2 !important;
+  border-color: #f27b60 !important;
 }
 
 .filterInput:not(:focus):not([value=""]),
@@ -353,7 +353,7 @@ input[type="password"] {
 .textArea:focus:not([value=""]) + .textAreaLabel {
   top: -15px !important;
   transition: 250ms ease;
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   z-index: 2;
 }
 
@@ -361,6 +361,6 @@ input[type="password"] {
 .textArea:not(:focus):not([value=""]) + .textAreaLabel {
   top: -15px !important;
   transition: 250ms ease;
-  color: #7360f2 !important;
+  color: #f27b60 !important;
   z-index: 2;
 } */

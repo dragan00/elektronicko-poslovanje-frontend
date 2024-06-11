@@ -27,7 +27,7 @@ import { connect, useDispatch } from "react-redux";
 import { GET_USER, PREPARE, SET_APP_LANG } from "./redux/modules/User/actions";
 
 // Icons
-import LogoIcon from "./assets/icons/logo_purple_filled.png";
+import LogoIcon from "./assets/icons/new_logo.png";
 
 // Components
 import Tabs from "./components/Tabs/Header";
@@ -222,7 +222,7 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
             style={{ width: siderCollapsed ? 64 : 240 }}
           >
             <img src={LogoIcon} className="logoIcon" />
-            <p className="logoName">JOKER</p>
+            <p className="logoName">EP Transport</p>
           </div>
           {showBackButton && (
             <Button
@@ -260,11 +260,11 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
           )}
         </div>
 
-        {currentUser.is_admin &&   <div style={{marginRight: 33, backgroundColor:"white"}} >
-         <Link style={{padding: 12}} to="/backoff/dashboard">Backoffice</Link>
+        {currentUser.is_admin &&   <div style={{marginRight: 20}} >
+         <Link style={{padding: 12, color: "white"}} to="/backoff/dashboard">Backoffice</Link>
         </div>}
 
-        <div>
+        {/* <div>
           <Dropdown overlay={menu} placement="bottomCenter" arrow>
             <Button type="ghost">
               <div style={{ color: "#fff" }}>
@@ -275,7 +275,7 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
               </div>
             </Button>
           </Dropdown>
-        </div>
+        </div> */}
      
         <div>
           <Popconfirm
@@ -303,6 +303,7 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
     margin: 0,
     padding: 0,
     width: "100%",
+    height: "100vh"
   };
   if (!auth) {
     return (
@@ -358,7 +359,7 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
 
   return (
     <>
-      <Layout id="layout">
+      <Layout id="layout" style={{ height: isBackOff ? "100vh" : "calc(100vh - 64px)" }}>
         {/* Header */}
         {!isBackOff && HEADER}
 
@@ -449,7 +450,7 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
           </Content>
         </Layout>
       </Layout>
-      <CustomVerticalDevider height={60} />
+      <CustomVerticalDevider height={isBackOff ? 0 :60} />
     </>
   );
 };

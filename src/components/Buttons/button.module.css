@@ -5,9 +5,9 @@
 #basic .style {
   height: 60px;
   border-radius: 3px;
-  background-color: #f3ecff;
+  background-color: #fff1ed;
   border: none;
-  color: #7360f2;
+  color: #f27b60;
   font-weight: 500;
   font-size: 16px;
   min-width: 150px;
@@ -47,7 +47,7 @@
 }
 
 #iconButton:hover {
-  border-color: #7360f2;
+  border-color: #f27b60;
   transition: 250ms ease;
 }
 

@@ -19,7 +19,7 @@ import Card from "../../../components/Cards/WithAction";
 import login from "../../../assets/icons/login.png";
 import CustomVerticalDevider from "../../../components/CustomVerticalDevider";
 import { iOS } from "../../../helpers/functions";
-import LogoIcon from "../../../assets/icons/logo_white_filled.png";
+import LogoIcon from "../../../assets/icons/new_logo_primary.png";
 import Translate from "../../../Translate";
 
 const { Item } = Form;

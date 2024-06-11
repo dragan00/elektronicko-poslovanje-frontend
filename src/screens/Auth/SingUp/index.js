@@ -46,7 +46,7 @@ import CustomVerticalDevider from "../../../components/CustomVerticalDevider";
 import CloseElement from "../../../components/CloseElement";
 import CustomAntdFormField from "../../../components/CustomAntdFormField";
 import CustomInputLabel from "../../../components/Inputs/CustomInputLabel";
-import LogoIcon from "../../../assets/icons/logo_white_filled.png";
+import LogoIcon from "../../../assets/icons/new_logo_primary.png";
 import Translate from "../../../Translate";
 
 // Constants

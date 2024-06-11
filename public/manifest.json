@@ -1,11 +1,11 @@
 {
-    "theme_color": "#7360f2",
+    "theme_color": "#f27b60",
     "background_color": "#ffffff",
     "display": "standalone",
     "scope": "/",
     "start_url": "/?mode=standalone",
-    "name": "Joker",
-    "short_name": "Joker",
+    "name": "EP Transport Application",
+    "short_name": "EP Transport",
     "description": "Transportation application",
     "purpose": "maskable any",
     "icons": [

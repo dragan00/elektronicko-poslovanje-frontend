@@ -35,10 +35,11 @@ const Backoff = ({ currentUser }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "45px 27px",
+          padding: 20,
+          backgroundColor: "#f27b6020"
         }}
       >
-        <div>
+        <div >
           <Link to="/backoff/dashboard"> Dashboard</Link>
           <Link style={{ marginLeft: 39 }} to="/backoff/places">
             {" "}

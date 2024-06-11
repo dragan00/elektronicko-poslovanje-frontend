@@ -48,7 +48,7 @@
 }
 
 .boxWrapper:hover{
-    border: 1px solid #7360f2;
+    border: 1px solid #f27b60;
     transition: 250ms ease;
 }
 
@@ -68,7 +68,7 @@
 
 .box .value{
     font-size: 52px;
-    color: #7360f2;
+    color: #f27b60;
     /* text-decoration: underline; */
 }
 
@@ -135,7 +135,7 @@
 }
 
 .informations .name{
-    color: #7360f2;
+    color: #f27b60;
 }
 
 .decorationLeft{

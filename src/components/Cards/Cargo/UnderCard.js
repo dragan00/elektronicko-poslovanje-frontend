@@ -232,7 +232,7 @@ const UnderCard = ({ item, owner, scroll }) => {
               >
                 <p
                   className={styles.label}
-                  style={{ borderBottom: "2px solid #7360f2" }}
+                  style={{ borderBottom: "2px solid #f27b60" }}
                 >
                   <Translate textKey={"auction"} />
                 </p>
