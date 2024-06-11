@@ -4,6 +4,8 @@ import locale from "antd/es/date-picker/locale/hr_HR";
 import Compressor from "compressorjs";
 
 export const getTranslation = (arr, lang) => {
+  lang = lang.toLowerCase();
+  console.log("getTranslation -> arr", arr, lang)
   if (typeof arr === "string") {
     return { name: arr };
   }
