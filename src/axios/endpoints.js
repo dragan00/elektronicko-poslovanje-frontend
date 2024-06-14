@@ -17,7 +17,7 @@ export const getApiEndpoint = () => {
 
   // LOCAL
   else if (deploy === "LOCAL") {
-    return "http://192.168.88.203:8045/api/";
+    return "http://localhost:8045/api/";
   }
 
   // PRODUCTION
