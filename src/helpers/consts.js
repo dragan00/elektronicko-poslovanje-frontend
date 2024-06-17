@@ -27,7 +27,7 @@ export const LOAD_SPACE_PLACE_TYPE = {
 };
 
 export const LANGS = [
-  { label: "HR", value: "hr" },
+  { label: "hr", value: "hr" },
   { label: "EN", value: "en" },
   { label: "DE", value: "de", disabled: true },
 ];

@@ -146,7 +146,7 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
     document.body.classList.add("is-momentumScrollable");
 
     const appLanguageFromLocalStorage = localStorage.getItem("app_language");
-    dispatch({ type: SET_APP_LANG, data: appLanguageFromLocalStorage || "HR" });
+    dispatch({ type: SET_APP_LANG, data: appLanguageFromLocalStorage || "hr" });
 
     // When rendering our container
 
@@ -180,8 +180,8 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
   }
 
   function setAppLanguage(lang) {
-    dispatch({ type: SET_APP_LANG, data: lang?.alpha2Code || "HR" });
-    localStorage.setItem("app_language", lang?.alpha2Code || "HR");
+    dispatch({ type: SET_APP_LANG, data: lang?.alpha2Code || "hr" });
+    localStorage.setItem("app_language", lang?.alpha2Code || "hr");
     window.location.reload();
   }
 

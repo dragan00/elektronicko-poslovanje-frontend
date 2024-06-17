@@ -44,8 +44,8 @@ export default function MenuComponent({
   const dispatch = useDispatch();
 
   function setAppLanguage(lang) {
-    dispatch({ type: SET_APP_LANG, data: lang?.alpha2Code || "HR" });
-    localStorage.setItem("app_language", lang?.alpha2Code || "HR");
+    dispatch({ type: SET_APP_LANG, data: lang?.alpha2Code || "hr" });
+    localStorage.setItem("app_language", lang?.alpha2Code || "hr");
     window.location.reload();
   }
 

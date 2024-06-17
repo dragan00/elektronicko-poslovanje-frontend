@@ -53,7 +53,7 @@ const initialState = {
     data: { languages: [], countries: [], cities: [], zip_codes: [] },
   },
 
-  lang: "HR",
+  lang: "hr",
 };
 
 export default function reducer(state = initialState, action = {}) {
