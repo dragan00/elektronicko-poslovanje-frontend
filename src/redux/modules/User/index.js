@@ -17,7 +17,7 @@ import { getApiEndpoint } from "../../../axios/endpoints";
 
 // Initial state
 const initialState = {
-  appLang: "HR",
+  appLang: "hr",
 
   updateUser: {
     status: "",

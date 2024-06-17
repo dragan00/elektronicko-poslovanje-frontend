@@ -4,39 +4,30 @@ import React, { useEffect, useState } from "react";
 import useDevice from "../../../../helpers/useDevice";
 
 // UI
-import { Row, Col, Space, List, message } from "antd";
-import styles from "../../routes.module.css";
+import { Col, List, message, Row, Space } from "antd";
 import addFilter from "../../../../assets/icons/add_filter.png";
 import editFilter from "../../../../assets/icons/edit_filter.png";
 import loadMore from "../../../../assets/icons/load_more.png";
+import styles from "../../routes.module.css";
 
 // Components
+import Button from "antd/es/button";
+import { unstable_batchedUpdates } from "react-dom";
+import { connect, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import Card from "../../../../components/Cards/LoadSpace";
 import CardHeader from "../../../../components/Cards/LoadSpace/Header";
+import CitiesFilter from "../../../../components/CitiesFilter";
+import CustomDrawer from "../../../../components/CustomDrawer";
+import CustomVerticalDevider from "../../../../components/CustomVerticalDevider";
+import { createQueryParamsFromFilter, iOS, mapCItiesFilter } from "../../../../helpers/functions";
+import { GET_LOADING_SPACE, SET_CITIES_FILTER } from "../../../../redux/modules/Transport/actions";
+import Translate from "../../../../Translate";
 import DynamicTabs from "../Tabs/Dynamic";
 import Filters from "./components/Filters";
-import Card from "../../../../components/Cards/LoadSpace";
-import { connect, useDispatch } from "react-redux";
-import { GET_LOADING_SPACE, SET_CITIES_FILTER } from "../../../../redux/modules/Transport/actions";
-import { useHistory } from "react-router-dom";
-import Button from "antd/es/button";
-import {
-  createQueryParamsFromFilter,
-  iOS,
-  mapCItiesFilter,
-} from "../../../../helpers/functions";
-import CustomVerticalDevider from "../../../../components/CustomVerticalDevider";
-import { unstable_batchedUpdates } from "react-dom";
-import CustomDrawer from "../../../../components/CustomDrawer";
-import CitiesFilter from "../../../../components/CitiesFilter";
-import Translate from "../../../../Translate";
+import useWebSocket from "react-use-websocket";
 
-const LoadingSpace = ({
-  getLoadingSpace,
-  panes,
-  activePaneKey,
-  currentUser,
-  citiesFilter
-}) => {
+const LoadingSpace = ({ getLoadingSpace, panes, activePaneKey, currentUser, citiesFilter }) => {
   const dispatch = useDispatch();
   // Variables
   const device = useDevice();
@@ -47,11 +38,7 @@ const LoadingSpace = ({
 
   useEffect(() => {
     const queryParams =
-      activePaneKey !== "tab"
-        ? createQueryParamsFromFilter(
-            panes.find((x) => x.path === activePaneKey).filters
-          )
-        : null;
+      activePaneKey !== "tab" ? createQueryParamsFromFilter(panes.find((x) => x.path === activePaneKey).filters) : null;
     dispatch({
       type: GET_LOADING_SPACE,
       queryParams,
@@ -83,6 +70,27 @@ const LoadingSpace = ({
     };
   }, []);
 
+  const socketInfo = useWebSocket(process.env.REACT_APP_WS_URL, {
+    onMessage: (event) => {
+      let data = JSON.parse(event.data);
+      if (data.type === "list" && data.part_of_app === "loading_space") {
+        const queryParams =
+          activePaneKey !== "tab"
+            ? createQueryParamsFromFilter(panes.find((x) => x.path === activePaneKey).filters)
+            : null;
+        dispatch({
+          type: GET_LOADING_SPACE,
+          queryParams,
+          startWithEmptyArr: true,
+          errorCallback: () => {
+            message.error("Upss dogodila se greška kod dohvata podataka...", 6);
+          },
+        });
+      }
+    },
+    shouldReconnect: (closeEvent) => true,
+  });
+
   function handleOnClick(update) {
     history.push("#drawer");
     unstable_batchedUpdates(() => {
@@ -93,19 +101,13 @@ const LoadingSpace = ({
 
   // drawer back buttobn
 
-
-
-let filtredSortedData =getLoadingSpace.data.data;
+  let filtredSortedData = getLoadingSpace.data.data;
 
   if (citiesFilter.citiesIds.length) {
-    filtredSortedData = getLoadingSpace.data.data?.filter((x) =>
-      !!x.starting_point_destination.filter((y) => citiesFilter.citiesIds.includes(y.city?.id)).length 
+    filtredSortedData = getLoadingSpace.data.data?.filter(
+      (x) => !!x.starting_point_destination.filter((y) => citiesFilter.citiesIds.includes(y.city?.id)).length
     );
-
-  
   }
-
-
 
   return (
     <div>
@@ -124,9 +126,7 @@ let filtredSortedData =getLoadingSpace.data.data;
             {activePaneKey !== "tab" && (
               <div style={{ marginLeft: 10 }}>
                 <Button
-                  icon={
-                    <img src={editFilter} style={{ width: 24, height: 18 }} />
-                  }
+                  icon={<img src={editFilter} style={{ width: 24, height: 18 }} />}
                   style={{ height: 40, width: 40 }}
                   shape="circle"
                   update={true}
@@ -134,92 +134,66 @@ let filtredSortedData =getLoadingSpace.data.data;
                 />
               </div>
             )}
-             <div style={{ marginLeft: 12 }}>
+            <div style={{ marginLeft: 12 }}>
               <Button
-                icon={
-                  <img
-                    src={addFilter}
-                    style={{ width: 24, height: 18, marginRight: 6 }}
-                  />
-                }
+                icon={<img src={addFilter} style={{ width: 24, height: 18, marginRight: 6 }} />}
                 update={true}
                 onClick={() => {
                   history.push("#drawer");
                   set_citiesFilterVisible(true);
                 }}
               >
-                 <Translate textKey={"cities"} /> <span style={{display: "inline-block", width: 6}} /> {citiesFilter.citiesIds.length} 
+                <Translate textKey={"cities"} /> <span style={{ display: "inline-block", width: 6 }} />{" "}
+                {citiesFilter.citiesIds.length}
               </Button>
             </div>
           </div>
         )}
       </div>
 
-     <div className={styles.cargo}>
+      <div className={styles.cargo}>
         <div style={{ width: "100%" }}>
-          
           <Row>
-       
-             <Col span={24} style={{ width: "100%" }}>
-              <Space
-                direction="vertical"
-                size="small"
-                style={{ width: "100%" }}
-              >
+            <Col span={24} style={{ width: "100%" }}>
+              <Space direction="vertical" size="small" style={{ width: "100%" }}>
                 {device === "mobile" && (
-                  <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}} > 
-                  <div className={styles.flexRow}>
-                    <div>
-                      <Button
-                        icon={
-                          <img
-                            src={addFilter}
-                            style={{ width: 24, height: 18 }}
-                          />
-                        }
-                        style={{ height: 40, width: 40 }}
-                        shape="circle"
-                        onClick={() => handleOnClick(false)}
-                      />
-                    </div>
-                    {activePaneKey !== "tab" && (
-                      <div style={{ marginLeft: 10 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div className={styles.flexRow}>
+                      <div>
                         <Button
-                          icon={
-                            <img
-                              src={editFilter}
-                              style={{ width: 24, height: 18 }}
-                            />
-                          }
+                          icon={<img src={addFilter} style={{ width: 24, height: 18 }} />}
                           style={{ height: 40, width: 40 }}
                           shape="circle"
-                          update={true}
-                          onClick={() => handleOnClick(true)}
+                          onClick={() => handleOnClick(false)}
                         />
                       </div>
-                    )}
-                  </div>
-                  <div>
-                      <Button
-                        icon={
-                          <img
-                            src={addFilter}
-                            style={{ width: 24, height: 18, marginRight: 6 }}
+                      {activePaneKey !== "tab" && (
+                        <div style={{ marginLeft: 10 }}>
+                          <Button
+                            icon={<img src={editFilter} style={{ width: 24, height: 18 }} />}
+                            style={{ height: 40, width: 40 }}
+                            shape="circle"
+                            update={true}
+                            onClick={() => handleOnClick(true)}
                           />
-                        }
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <Button
+                        icon={<img src={addFilter} style={{ width: 24, height: 18, marginRight: 6 }} />}
                         update={true}
                         onClick={() => {
                           history.push("#drawer");
                           set_citiesFilterVisible(true);
                         }}
                       >
-                         <Translate textKey={"cities"} />{" "} {citiesFilter.citiesIds.length} 
+                        <Translate textKey={"cities"} /> {citiesFilter.citiesIds.length}
                       </Button>
                     </div>
                   </div>
                 )}
 
-          
                 <div>
                   <List
                     header={<CardHeader />}
@@ -242,55 +216,35 @@ let filtredSortedData =getLoadingSpace.data.data;
                                 type: GET_LOADING_SPACE,
                                 startWithEmptyArr: false,
                                 queryParams: {
-                                  ...createQueryParamsFromFilter(
-                                    panes.find((x) => x.path === activePaneKey)
-                                      .filters
-                                  ),
-                                  next_cursor:
-                                    getLoadingSpace.data.cursor.next_cursor,
+                                  ...createQueryParamsFromFilter(panes.find((x) => x.path === activePaneKey).filters),
+                                  next_cursor: getLoadingSpace.data.cursor.next_cursor,
                                 },
                                 errorCallback: () => {
-                                  message.error(
-                                    <Translate textKey={"fetch_data_error"} />,
-                                    6
-                                  );
+                                  message.error(<Translate textKey={"fetch_data_error"} />, 6);
                                 },
                               });
                             }}
                           >
-                            <Translate  textKey={"upload_butt"}  />  <br /> 
-                            <img
-                              src={loadMore}
-                              style={{ width: 24, height: 24, marginTop: -16 }}
-                            />
+                            <Translate textKey={"upload_butt"} /> <br />
+                            <img src={loadMore} style={{ width: 24, height: 24, marginTop: -16 }} />
                           </Button>
                         </div>
                       )
                     }
-                    renderItem={(item) => (
-                      <Card
-                        id={item.id}
-                        item={item}
-                        currentUser={currentUser}
-                      />
-                    )}
+                    renderItem={(item) => <Card id={item.id} item={item} currentUser={currentUser} />}
                   />
-                  <CustomVerticalDevider
-                    height={60}
-                    bottomExtend={iOS() ? 145 : 0}
-                  />
+                  <CustomVerticalDevider height={60} bottomExtend={iOS() ? 145 : 0} />
                 </div>
               </Space>
-            </Col> 
+            </Col>
 
-             <CustomDrawer
+            <CustomDrawer
               onClose={() => {
                 setDrawerVisible(false);
                 set_updateFilter(false);
               }}
               visible={drawerVisible}
             >
-           
               <Filters
                 updateFilter={updateFilter}
                 closeDrawer={() => {
@@ -302,7 +256,6 @@ let filtredSortedData =getLoadingSpace.data.data;
               />
             </CustomDrawer>
 
-
             <CustomDrawer
               onClose={() => {
                 set_citiesFilterVisible(false);
@@ -310,10 +263,10 @@ let filtredSortedData =getLoadingSpace.data.data;
               visible={citiesFilterVisible}
             >
               <CitiesFilter close={() => set_citiesFilterVisible(false)} />
-            </CustomDrawer> 
+            </CustomDrawer>
           </Row>
         </div>
-      </div> 
+      </div>
     </div>
   );
 };

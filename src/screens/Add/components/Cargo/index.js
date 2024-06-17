@@ -4,21 +4,21 @@ import React, { useEffect, useState } from "react";
 import useDevice from "../../../../helpers/useDevice";
 
 // UI
-import { Row, Col, Space, message, List, Button } from "antd";
-import styles from "../../add.module.css";
+import { Button, Col, List, Row, Space, message } from "antd";
 import AddIcon from "../../../../assets/icons/add.png";
+import styles from "../../add.module.css";
 
 // Components
-import Card from "../../../../components/Cards/Cargo";
-import Form from "./components/Form";
 import { connect, useDispatch } from "react-redux";
-import { GET_MY_CARGO } from "../../../../redux/modules/Transport/actions";
+import { useHistory } from "react-router-dom";
+import Card from "../../../../components/Cards/Cargo";
 import CargoHeader from "../../../../components/Cards/Cargo/CargoHeader";
-import { useRouteMatch, useHistory } from "react-router-dom";
+import CustomDrawer from "../../../../components/CustomDrawer";
 import CustomVerticalDevider from "../../../../components/CustomVerticalDevider";
 import { iOS } from "../../../../helpers/functions";
-import CustomDrawer from "../../../../components/CustomDrawer";
+import { GET_MY_CARGO } from "../../../../redux/modules/Transport/actions";
 import Translate from "../../../../Translate";
+import Form from "./components/Form";
 const Offer = ({ cargo, currentUser }) => {
   const dispatch = useDispatch();
 
@@ -64,6 +64,7 @@ const Offer = ({ cargo, currentUser }) => {
     setDrawerVisible(true);
   }
 
+
   // drawer back buttobn
 
   // Loading
@@ -82,7 +83,7 @@ const Offer = ({ cargo, currentUser }) => {
                   height: 80,
                   padding: "0 32px",
                   width: device === "mobile" && "100%",
-                  marginTop: device === 'mobile' && 16
+                  marginTop: device === "mobile" && 16,
                 }}
                 onClick={handleOnClick}
               >
@@ -109,7 +110,7 @@ const Offer = ({ cargo, currentUser }) => {
                         fontSize: device === "mobile" ? 12 : 14,
                       }}
                     >
-                     <Translate textKey={"add_butt"}  />
+                      <Translate textKey={"add_butt"} />
                     </span>
                     <span
                       style={{
@@ -129,14 +130,9 @@ const Offer = ({ cargo, currentUser }) => {
                 loading={cargo.status === "loading"}
                 header={<CargoHeader />}
                 dataSource={cargo.data}
-                renderItem={(item) => (
-                  <Card id={item.id} item={item} currentUser={currentUser} />
-                )}
+                renderItem={(item) => <Card id={item.id} item={item} currentUser={currentUser} />}
               />
-              <CustomVerticalDevider
-                height={60}
-                bottomExtend={iOS() ? 145 : 0}
-              />
+              <CustomVerticalDevider height={60} bottomExtend={iOS() ? 145 : 0} />
             </Space>
           </Col>
 

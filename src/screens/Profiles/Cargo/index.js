@@ -47,6 +47,7 @@ import { unstable_batchedUpdates } from "react-dom";
 import CustomDrawer from "../../../components/CustomDrawer";
 import DestionationCountLabel from "../../../components/DestinationCountLabel";
 import Translate from "../../../Translate";
+import useWebSocket from "react-use-websocket";
 
 const { Countdown } = Statistic;
 
@@ -130,6 +131,23 @@ const Profile = ({ oneCargo, currentUser }) => {
       </div>
     );
   };
+
+
+  const socketInfo = useWebSocket(process.env.REACT_APP_WS_URL, {
+    onMessage: (event) => {
+      let data = JSON.parse(event.data);
+      if (data.type === "details" && data.part_of_app === "cargo") {
+        dispatch({
+          type: ONE_CARGO,
+          id,
+          errorCallback: () => {
+            message.error("Upss dogodila se greška kod dohvata podataka...", 3);
+          },
+        });
+      }
+    },
+    shouldReconnect: (closeEvent) => true,
+  });
 
   // drawer back buttobn
 

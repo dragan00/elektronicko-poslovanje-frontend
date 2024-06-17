@@ -1,61 +1,40 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useDevice from "../../../helpers/useDevice";
 
 // UI
-import styles from "./warehouse.module.css";
-import {
-  Row,
-  Col,
-  Image,
-  Space,
-  message,
-  Carousel,
-  Button,
-  Modal,
-} from "antd";
-import Collapse from "../../../components/Collapse";
+import { Button, Carousel, Col, Image, Modal, Row, Space, message } from "antd";
 import User from "../../../components/Cards/User";
+import Collapse from "../../../components/Collapse";
 import Loader from "../../../components/Loaders/Page";
-import MultipleInformations from "../../../components/Cards/Multiple";
-import BasicCard from "../../../components/Cards/Basic";
-import BasicButton from "../../../components/Buttons/Basic";
+import styles from "./warehouse.module.css";
 
 // Icons
-import Default from "../../../assets/icons/default_image.png";
-import IconButton from "../../../components/Buttons/Icon";
-import Edit from "../../../assets/icons/edit.png";
-import { TiLocation, TiBusinessCard } from "react-icons/ti";
-import { ImPhone } from "react-icons/im";
-import { FaFax } from "react-icons/fa";
-import { IoMail, IoGlobeOutline } from "react-icons/io5";
-import { connect, useDispatch } from "react-redux";
-import {
-  ONE_STOCK,
-  ONE_STOCK_SUCCESS,
-} from "../../../redux/modules/Transport/actions";
-import { useParams, useHistory, Link } from "react-router-dom";
 import moment from "moment";
+import { connect, useDispatch } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
+import Default from "../../../assets/icons/default_image.png";
 import { COMPANY_STATUSES, PHONE_NUM_TYPE } from "../../../helpers/consts";
+import { ONE_STOCK, ONE_STOCK_SUCCESS } from "../../../redux/modules/Transport/actions";
 import UpdateForm from "../../Add/components/Warehouses/components/Form";
 
 import {
-  DeleteOutlined,
-  EditFilled,
-  FileAddOutlined,
-  ArrowRightOutlined,
   ArrowLeftOutlined,
+  ArrowRightOutlined,
+  DeleteOutlined,
   EditOutlined,
+  FileAddOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import { getApiEndpoint, getFilesRoute } from "../../../axios/endpoints";
 import AddImage from "./components/AddImage";
 
+import useWebSocket from "react-use-websocket";
 import NOT_FOUND_IMG from "../../../assets/images/notFound.png";
 import CompanyInformations from "../../../components/CompanyInformations";
-import { iOS } from "../../../helpers/functions";
-import CustomVerticalDevider from "../../../components/CustomVerticalDevider";
-import { colors } from "../../../styles/colors";
 import CustomDrawer from "../../../components/CustomDrawer";
+import CustomVerticalDevider from "../../../components/CustomVerticalDevider";
+import { iOS } from "../../../helpers/functions";
+import { colors } from "../../../styles/colors";
 import Translate from "../../../Translate";
 
 function Profile({ oneStock, currentUser }) {
@@ -87,6 +66,23 @@ function Profile({ oneStock, currentUser }) {
     }
   }, []);
 
+  const socketInfo = useWebSocket(process.env.REACT_APP_WS_URL, {
+    onOpen: () => console.log("DEV-LOG opened"),
+    onMessage: (event) => {
+      let data = JSON.parse(event.data);
+      console.log("DEV-LOG ~ LoadingSpace ~ data:", data);
+      if (data.type === "details" && data.part_of_app === "stock") {
+        dispatch({
+          type: ONE_STOCK,
+          id: params.id,
+          errorCallback: () => {
+            message.error(<Translate textKey={"fetch_data_error"} />, 6);
+          },
+        });
+      }
+    },
+    shouldReconnect: (closeEvent) => true,
+  });
 
   const removeWarhouse = async () => {
     set_deleteLoading(true);
@@ -113,17 +109,11 @@ function Profile({ oneStock, currentUser }) {
     set_removeImageLoading(id);
     const token = await localStorage.getItem("token");
     axios
-      .post(
-        `${getApiEndpoint()}transport/stock/${
-          oneStock.data.id
-        }/images/${id}/remove/`,
-        null,
-        {
-          headers: {
-            Authorization: "Token " + token,
-          },
-        }
-      )
+      .post(`${getApiEndpoint()}transport/stock/${oneStock.data.id}/images/${id}/remove/`, null, {
+        headers: {
+          Authorization: "Token " + token,
+        },
+      })
       .then((res) => {
         const data = { ...oneStock.data, images: res.data.images };
         dispatch({ type: ONE_STOCK_SUCCESS, data });
@@ -151,20 +141,11 @@ function Profile({ oneStock, currentUser }) {
   };
 
   const fax_numbers =
-    oneStock.data.company.numbers
-      ?.filter((x) => x.type === PHONE_NUM_TYPE.FAX)
-      .map((x) => x.number) || [];
+    oneStock.data.company.numbers?.filter((x) => x.type === PHONE_NUM_TYPE.FAX).map((x) => x.number) || [];
   const tel_numbers =
-    oneStock.data.company.numbers
-      ?.filter((x) => x.type === PHONE_NUM_TYPE.TEL)
-      .map((x) => x.number) || [];
+    oneStock.data.company.numbers?.filter((x) => x.type === PHONE_NUM_TYPE.TEL).map((x) => x.number) || [];
 
-  const emails =
-    oneStock.data.company.emails
-      ?.filter((x) => x.type === PHONE_NUM_TYPE.TEL)
-      .map((x) => x.number) || [];
-
-
+  const emails = oneStock.data.company.emails?.filter((x) => x.type === PHONE_NUM_TYPE.TEL).map((x) => x.number) || [];
 
   return (
     <div className="profile">
@@ -173,95 +154,82 @@ function Profile({ oneStock, currentUser }) {
         <Row gutter={device === "mobile" ? [0] : [24]}>
           <Col xs={24} xl={24}>
             <div className={styles.imageWrapper}>
-              {
-                oneStock.data.images && oneStock.data.images.length ?
-                  <>
-                    <Carousel
-                      className={"image_slider"}
-                      autoplay={false}
-                      dots={"fefefee"}
-                      style={{ maxHeight: 360 }}
-                      ref={carouselRef}
-                    >
-                      {oneStock.data.images && oneStock.data.images.length
-                        ? oneStock.data.images.map((x) => (
-                            <div style={{ maxHeight: 360 }}>
-                              <Button
-                                loading={removeImageLoading === 2}
-                                size="large"
-                                shape="circle"
-                                style={{
-                                  position: "absolute",
-                                  top: 10,
-                                  right: 10,
-                                  zIndex: 12,
-                                  backgroundColor: "rgba(0,0,0,.35)",
-                                  border: "none",
-                                }}
-                                icon={<DeleteOutlined style={{ color: "#fff" }} />}
-                                onClick={() => removeImage(x.id)}
-                              />
-                              <Image
-                                width={"100%"}
-                                height={480}
-                                fallback={NOT_FOUND_IMG}
-                                src={`${getFilesRoute()}${x.path}`}
-                              />{" "}
-                            </div>
-                          ))
-                        : null}
-                    </Carousel>
-
-                    {/* Arrows */}
-                    {oneStock.data.images && oneStock.data.images.length ? (
-                      <>
-                        <Button
-                          size="large"
-                          shape="circle"
-                          style={{
-                            position: "absolute",
-                            bottom: "calc(50% - 20px)",
-                            right: 10,
-                            zIndex: 12,
-                            backgroundColor: "rgba(0,0,0,.35)",
-                            border: "none",
-                          }}
-                          icon={
-                            <ArrowRightOutlined
-                              style={{ color: colors.white }}
+              {oneStock.data.images && oneStock.data.images.length ? (
+                <>
+                  <Carousel
+                    className={"image_slider"}
+                    autoplay={false}
+                    dots={"fefefee"}
+                    style={{ maxHeight: 360 }}
+                    ref={carouselRef}
+                  >
+                    {oneStock.data.images && oneStock.data.images.length
+                      ? oneStock.data.images.map((x) => (
+                          <div style={{ maxHeight: 360 }}>
+                            <Button
+                              loading={removeImageLoading === 2}
+                              size="large"
+                              shape="circle"
+                              style={{
+                                position: "absolute",
+                                top: 10,
+                                right: 10,
+                                zIndex: 12,
+                                backgroundColor: "rgba(0,0,0,.35)",
+                                border: "none",
+                              }}
+                              icon={<DeleteOutlined style={{ color: "#fff" }} />}
+                              onClick={() => removeImage(x.id)}
                             />
-                          }
-                          onClick={() => carouselRef.current.next()}
-                        />
+                            <Image
+                              width={"100%"}
+                              height={480}
+                              fallback={NOT_FOUND_IMG}
+                              src={`${getFilesRoute()}${x.path}`}
+                            />{" "}
+                          </div>
+                        ))
+                      : null}
+                  </Carousel>
 
-                        <Button
-                          size="large"
-                          shape="circle"
-                          style={{
-                            position: "absolute",
-                            bottom: "calc(50% - 20px)",
-                            left: 10,
-                            zIndex: 12,
-                            backgroundColor: "rgba(0,0,0,.35)",
-                            border: "none",
-                          }}
-                          icon={
-                            <ArrowLeftOutlined
-                              style={{ color: colors.white }}
-                            />
-                          }
-                          onClick={() => carouselRef.current.prev()}
-                        />
-                      </>
-                    ) : null}
-                  </>
-                  : 
-                  <Image
-                    className={styles.profileImage}
-                    width="100%"
-                    src={Default}
-                  />
-              }
+                  {/* Arrows */}
+                  {oneStock.data.images && oneStock.data.images.length ? (
+                    <>
+                      <Button
+                        size="large"
+                        shape="circle"
+                        style={{
+                          position: "absolute",
+                          bottom: "calc(50% - 20px)",
+                          right: 10,
+                          zIndex: 12,
+                          backgroundColor: "rgba(0,0,0,.35)",
+                          border: "none",
+                        }}
+                        icon={<ArrowRightOutlined style={{ color: colors.white }} />}
+                        onClick={() => carouselRef.current.next()}
+                      />
+
+                      <Button
+                        size="large"
+                        shape="circle"
+                        style={{
+                          position: "absolute",
+                          bottom: "calc(50% - 20px)",
+                          left: 10,
+                          zIndex: 12,
+                          backgroundColor: "rgba(0,0,0,.35)",
+                          border: "none",
+                        }}
+                        icon={<ArrowLeftOutlined style={{ color: colors.white }} />}
+                        onClick={() => carouselRef.current.prev()}
+                      />
+                    </>
+                  ) : null}
+                </>
+              ) : (
+                <Image className={styles.profileImage} width="100%" src={Default} />
+              )}
 
               {/* Add image */}
               {currentUser.company.id === oneStock.data.company.id && (
@@ -277,17 +245,13 @@ function Profile({ oneStock, currentUser }) {
                       backgroundColor: "rgba(0,0,0,.35)",
                       border: "none",
                     }}
-                    icon={
-                      <FileAddOutlined style={{ color: colors.green }} />
-                    }
+                    icon={<FileAddOutlined style={{ color: colors.green }} />}
                     onClick={() => {
                       set_addImagesVisible(true);
                     }}
                   />
-
                 </div>
               )}
-              
             </div>
           </Col>
         </Row>
@@ -295,56 +259,38 @@ function Profile({ oneStock, currentUser }) {
         <Row gutter={[24, 24]}>
           {/* Skladište */}
           <Col xs={24} lg={12} xl={8}>
-            <Collapse header={<Translate textKey={"warehouse"}  />}>
+            <Collapse header={<Translate textKey={"warehouse"} />}>
               <Row>
-                <Col span={12}>
-                  {Information(oneStock.data.country?.name, <Translate textKey={"country"} />)}
-                </Col>
-                <Col span={12}>
-                  {" "}
-                  {Information(oneStock.data.company.name, <Translate textKey={"company_name"} />)}
-                </Col>
+                <Col span={12}>{Information(oneStock.data.country?.name, <Translate textKey={"country"} />)}</Col>
+                <Col span={12}> {Information(oneStock.data.company.name, <Translate textKey={"company_name"} />)}</Col>
               </Row>
               <Row>
-                <Col span={12}>
-                  {Information(oneStock.data.city?.name, <Translate textKey={"city"} />)}
-                </Col>
+                <Col span={12}>{Information(oneStock.data.city?.name, <Translate textKey={"city"} />)}</Col>
                 <Col span={12}>
                   {Information(
                     moment(oneStock.data.start_datetime).format("YYYY-MM-DD"),
-                   <Translate  textKey={"free_from"}  />
+                    <Translate textKey={"free_from"} />
                   )}
                 </Col>
               </Row>
               <Row>
-                <Col span={12}>
-                  {Information(oneStock.data.zip_code?.name, <Translate textKey={"post_number"}  />)}
-                </Col>
+                <Col span={12}>{Information(oneStock.data.zip_code?.name, <Translate textKey={"post_number"} />)}</Col>
 
                 <Col span={12}>
                   {Information(
-                    oneStock.data.end_datetime
-                      ? moment(oneStock.data.end_datetime).format("YYYY-MM-DD")
-                      : "-",
-                    <Translate  textKey={"free_to"} />
+                    oneStock.data.end_datetime ? moment(oneStock.data.end_datetime).format("YYYY-MM-DD") : "-",
+                    <Translate textKey={"free_to"} />
                   )}
                 </Col>
+                <Col span={12}>{Information(oneStock.data.stock_types, <Translate textKey={"warehouse_name"} />)}</Col>
+
                 <Col span={12}>
-                  {Information(oneStock.data.stock_types, <Translate textKey={"warehouse_name"} />)}
+                  {Information(oneStock.data.stock_equipment, <Translate textKey={"warehouse_equip"} />)}
                 </Col>
 
                 <Col span={12}>
                   {Information(
-                    oneStock.data.stock_equipment,
-                    <Translate textKey={"warehouse_equip"} />
-                  )}
-                </Col>
-
-                <Col span={12}>
-                  {Information(
-                    `${oneStock.data.min_area || "- "}-${
-                      oneStock.data.max_area || " -"
-                    } ㎡`,
+                    `${oneStock.data.min_area || "- "}-${oneStock.data.max_area || " -"} ㎡`,
                     <Translate textKey={"surface"} />
                   )}
                 </Col>
@@ -378,27 +324,24 @@ function Profile({ oneStock, currentUser }) {
 
                   {currentUser.company.id === oneStock.data.company.id && (
                     <Col>
-                      <div
-                        className={styles.information}
-                        style={{ marginBottom: 16 }}
-                      >
-                        <p className={styles.label}><Translate textKey={"warehouse"}  /></p>
+                      <div className={styles.information} style={{ marginBottom: 16 }}>
+                        <p className={styles.label}>
+                          <Translate textKey={"warehouse"} />
+                        </p>
                         <div style={{ marginTop: 8 }}>
                           <Col>
                             <Button
                               style={{
                                 marginRight: 20,
                                 width: device === "mobile" && "100%",
-                                marginBottom: device === 'mobile' && 10
+                                marginBottom: device === "mobile" && 10,
                               }}
                               type="dashed"
                               onClick={() => {
                                 set_updateFormVisible(true);
                               }}
                               icon={<EditOutlined />}
-                           />
-                        
-                          
+                            />
 
                             <Button
                               style={{
@@ -407,11 +350,8 @@ function Profile({ oneStock, currentUser }) {
                               type=""
                               loading={deleteLoading}
                               onClick={removeWarhouse}
-                              icon={
-                                <DeleteOutlined style={{ color: colors.black }} />
-                              }
+                              icon={<DeleteOutlined style={{ color: colors.black }} />}
                             />
-                          
                           </Col>
                         </div>
                       </div>
@@ -439,16 +379,11 @@ function Profile({ oneStock, currentUser }) {
                     onCancel={() => set_imageSliderVisible(false)}
                   >
                     {" "}
-                    <Carousel
-                      className={"image_slider"}
-                      autoplay={false}
-                      dots={"fefefee"}
-                    >
+                    <Carousel className={"image_slider"} autoplay={false} dots={"fefefee"}>
                       {oneStock.data.images && oneStock.data.images.length ? (
                         oneStock.data.images.map((x) => (
                           <div>
-                            {currentUser.company.id ===
-                              oneStock.data.company.id && (
+                            {currentUser.company.id === oneStock.data.company.id && (
                               <Button
                                 loading={removeImageLoading === 2}
                                 shape="circle"
@@ -460,9 +395,7 @@ function Profile({ oneStock, currentUser }) {
                                   backgroundColor: "rgba(0,0,0,.35)",
                                   border: "none",
                                 }}
-                                icon={
-                                  <DeleteOutlined style={{ color: "#fff" }} />
-                                }
+                                icon={<DeleteOutlined style={{ color: "#fff" }} />}
                                 onClick={() => removeImage(x.id)}
                               />
                             )}
@@ -476,9 +409,7 @@ function Profile({ oneStock, currentUser }) {
                         ))
                       ) : (
                         <div style={{ minHeight: 600 }}>
-                          <h3 style={{ textAlign: "center", margin: "66px" }}>
-                            Nema učitanih slika
-                          </h3>
+                          <h3 style={{ textAlign: "center", margin: "66px" }}>Nema učitanih slika</h3>
                         </div>
                       )}
                     </Carousel>
@@ -488,10 +419,7 @@ function Profile({ oneStock, currentUser }) {
 
               <Row>
                 <Col span={12}>
-                  <CustomDrawer
-                    onClose={() => set_updateFormVisible(false)}
-                    visible={updateFormVisible}
-                  >
+                  <CustomDrawer onClose={() => set_updateFormVisible(false)} visible={updateFormVisible}>
                     {/* Rendering filters */}
                     <UpdateForm
                       close={() => set_updateFormVisible(false)}
@@ -505,11 +433,7 @@ function Profile({ oneStock, currentUser }) {
           </Col>
 
           <Col md={24} lg={12} xl={8} style={{ width: "100%" }}>
-            <Collapse 
-              header={<Translate textKey={"basic_info"} />}
-              collapsed={device === 'desktop'} 
-              specialCollapse
-            >
+            <Collapse header={<Translate textKey={"basic_info"} />} collapsed={device === "desktop"} specialCollapse>
               <CompanyInformations company={oneStock.data.company} />
             </Collapse>
           </Col>
@@ -538,10 +462,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, null)(Profile);
 
 const Information = (value = "", label = "", wrap = true) => (
-  <div
-    className={styles.information}
-    style={{ width: wrap ? "100%" : "max-content" }}
-  >
+  <div className={styles.information} style={{ width: wrap ? "100%" : "max-content" }}>
     <p className={styles.label}>{label || "-"}</p>
     <p className={styles.value}> {value || "-"}</p>
   </div>

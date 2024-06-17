@@ -18,6 +18,7 @@ import { STOCK } from "../../../../redux/modules/Transport/actions";
 import CustomVerticalDevider from "../../../../components/CustomVerticalDevider";
 import { filterWarhouses, iOS } from "../../../../helpers/functions";
 import CustomDrawer from "../../../../components/CustomDrawer";
+import useWebSocket from "react-use-websocket";
 
 const Demand = ({ stock, currentUser }) => {
   const dispatch = useDispatch();
@@ -62,6 +63,21 @@ const Demand = ({ stock, currentUser }) => {
     history.push("#drawer");
     setDrawerVisible(true);
   }
+
+  const socketInfo = useWebSocket(process.env.REACT_APP_WS_URL, {
+    onMessage: (event) => {
+      let data = JSON.parse(event.data);
+      if (data.type === "list" && data.part_of_app === "stock") {
+        dispatch({
+          type: STOCK,
+          errorCallback: () => {
+            message.error(<Translate textKey={"fetch_data_error"} />, 6);
+          },
+        });
+      }
+    },
+    shouldReconnect: (closeEvent) => true,
+  });
 
   // Loading
 

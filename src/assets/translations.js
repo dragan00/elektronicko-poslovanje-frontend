@@ -1,5 +1,5 @@
 export default {
-  HR: {
+  hr: {
     sign_in: "Prijava",
     mail: "E-mail adresa",
     pass: "Lozinka",

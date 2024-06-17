@@ -160,6 +160,8 @@ function AllForm({
   };
   useEffect(() => {
     set_translatedPrepare(setPrepareByLang(prepare.data, appLang));
+    console.log("DEV-LOG ~ useEffect ~ appLang:", appLang)
+    console.log("DEV-LOG ~ useEffect ~ prepare.data:", prepare.data)
   }, [appLang]);
 
   useEffect(() => {

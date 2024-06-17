@@ -5,34 +5,27 @@ import { useHistory } from "react-router-dom";
 import useDevice from "../../../../helpers/useDevice";
 
 // UI
-import { Row, Col, Space, message, List, Button } from "antd";
-import styles from "../../routes.module.css";
+import { Button, Col, List, Row, Space, message } from "antd";
 import addFilter from "../../../../assets/icons/add_filter.png";
 import editFilter from "../../../../assets/icons/edit_filter.png";
 import loadMore from "../../../../assets/icons/load_more.png";
+import styles from "../../routes.module.css";
 
 // Components
+import { unstable_batchedUpdates } from "react-dom";
+import { connect, useDispatch } from "react-redux";
+import useWebSocket from "react-use-websocket";
+import Card from "../../../../components/Cards/Cargo";
+import CargoHeader from "../../../../components/Cards/Cargo/CargoHeader";
+import CitiesFilter from "../../../../components/CitiesFilter";
+import CustomDrawer from "../../../../components/CustomDrawer";
+import CustomVerticalDevider from "../../../../components/CustomVerticalDevider";
+import { CARGO_PLACE_TYPE } from "../../../../helpers/consts";
+import { createQueryParamsFromFilter, iOS, mapCItiesFilter, sortByPostalCode } from "../../../../helpers/functions";
+import { CARGO, SET_CITIES_FILTER } from "../../../../redux/modules/Transport/actions";
+import Translate from "../../../../Translate";
 import DynamicTabs from "../../components/Tabs/Dynamic";
 import Filters from "./components/Filters";
-import Card from "../../../../components/Cards/Cargo";
-import { connect, useDispatch } from "react-redux";
-import {
-  CARGO,
-  SET_CITIES_FILTER,
-} from "../../../../redux/modules/Transport/actions";
-import CargoHeader from "../../../../components/Cards/Cargo/CargoHeader";
-import {
-  createQueryParamsFromFilter,
-  iOS,
-  mapCItiesFilter,
-  sortByPostalCode,
-} from "../../../../helpers/functions";
-import { CARGO_PLACE_TYPE } from "../../../../helpers/consts";
-import CustomVerticalDevider from "../../../../components/CustomVerticalDevider";
-import { unstable_batchedUpdates } from "react-dom";
-import CustomDrawer from "../../../../components/CustomDrawer";
-import CitiesFilter from "../../../../components/CitiesFilter";
-import Translate from "../../../../Translate";
 
 const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
   // Variables
@@ -46,11 +39,7 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
 
   useEffect(() => {
     const queryParams =
-      activePaneKey !== "tab"
-        ? createQueryParamsFromFilter(
-            panes.find((x) => x.path === activePaneKey).filters
-          )
-        : null;
+      activePaneKey !== "tab" ? createQueryParamsFromFilter(panes.find((x) => x.path === activePaneKey).filters) : null;
     dispatch({
       type: CARGO,
       queryParams,
@@ -67,6 +56,28 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
       data: { cities: mapCItiesFilter(cargo.data.data, "load_unload"), citiesIds: [] },
     });
   }, [cargo.data.data]);
+
+  const socketInfo = useWebSocket(process.env.REACT_APP_WS_URL, {
+    onOpen: () => console.log("DEV-LOG opened"),
+    onMessage: (event) => {
+      let data = JSON.parse(event.data)
+      if (data.type === "list" && data.part_of_app === "cargo") {
+        const queryParams =
+          activePaneKey !== "tab"
+            ? createQueryParamsFromFilter(panes.find((x) => x.path === activePaneKey).filters)
+            : null;
+        dispatch({
+          type: CARGO,
+          queryParams,
+          startWithEmptyArr: true,
+          errorCallback: () => {
+            message.error(<Translate textKey={"fetch_data_error"} />, 6);
+          },
+        });
+      }
+    },
+    shouldReconnect: (closeEvent) => true,
+  });
 
   // drawer back buttobn
   function historyListener(event) {
@@ -95,16 +106,12 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
   let filtredSortedData = cargo.data.data;
 
   if (!"sortByZip_code") {
-    filtredSortedData = sortByPostalCode(
-      cargo.data.data,
-      "load_unload",
-      CARGO_PLACE_TYPE.LOAD
-    );
+    filtredSortedData = sortByPostalCode(cargo.data.data, "load_unload", CARGO_PLACE_TYPE.LOAD);
   }
 
   if (citiesFilter.citiesIds.length) {
-    filtredSortedData = filtredSortedData.filter((x) =>
-      !!x.load_unload.filter((y) => citiesFilter.citiesIds.includes(y.city?.id)).length 
+    filtredSortedData = filtredSortedData.filter(
+      (x) => !!x.load_unload.filter((y) => citiesFilter.citiesIds.includes(y.city?.id)).length
     );
   }
 
@@ -125,9 +132,7 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
             {activePaneKey !== "tab" && (
               <div style={{ marginLeft: 10 }}>
                 <Button
-                  icon={
-                    <img src={editFilter} style={{ width: 24, height: 18 }} />
-                  }
+                  icon={<img src={editFilter} style={{ width: 24, height: 18 }} />}
                   style={{ height: 40, width: 40 }}
                   shape="circle"
                   update={true}
@@ -137,19 +142,15 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
             )}
             <div style={{ marginLeft: 12 }}>
               <Button
-                icon={
-                  <img
-                    src={addFilter}
-                    style={{ width: 24, height: 18, marginRight: 6 }}
-                  />
-                }
+                icon={<img src={addFilter} style={{ width: 24, height: 18, marginRight: 6 }} />}
                 update={true}
                 onClick={() => {
                   history.push("#drawer");
                   set_citiesFilterVisible(true);
                 }}
               >
-                <Translate textKey={"cities"} /> <span style={{display: "inline-block", width: 6}} />{ citiesFilter.citiesIds.length}
+                <Translate textKey={"cities"} /> <span style={{ display: "inline-block", width: 6 }} />
+                {citiesFilter.citiesIds.length}
               </Button>
             </div>
           </div>
@@ -162,11 +163,7 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
         <div style={{ width: "100%" }}>
           <Row>
             <Col span={24} style={{ width: "100%" }}>
-              <Space
-                direction="vertical"
-                size="small"
-                style={{ width: "100%" }}
-              >
+              <Space direction="vertical" size="small" style={{ width: "100%" }}>
                 {device === "mobile" && (
                   <div
                     style={{
@@ -178,12 +175,7 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
                     <div className={styles.flexRow}>
                       <div>
                         <Button
-                          icon={
-                            <img
-                              src={addFilter}
-                              style={{ width: 24, height: 18 }}
-                            />
-                          }
+                          icon={<img src={addFilter} style={{ width: 24, height: 18 }} />}
                           style={{ height: 40, width: 40 }}
                           shape="circle"
                           onClick={() => handleOnClick(false)}
@@ -192,12 +184,7 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
                       {activePaneKey !== "tab" && (
                         <div style={{ marginLeft: 10 }}>
                           <Button
-                            icon={
-                              <img
-                                src={editFilter}
-                                style={{ width: 24, height: 18 }}
-                              />
-                            }
+                            icon={<img src={editFilter} style={{ width: 24, height: 18 }} />}
                             style={{ height: 40, width: 40 }}
                             shape="circle"
                             update={true}
@@ -209,12 +196,7 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
 
                     <div>
                       <Button
-                        icon={
-                          <img
-                            src={addFilter}
-                            style={{ width: 24, height: 18, marginRight: 6 }}
-                          />
-                        }
+                        icon={<img src={addFilter} style={{ width: 24, height: 18, marginRight: 6 }} />}
                         update={true}
                         onClick={() => {
                           history.push("#drawer");
@@ -249,26 +231,17 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
                                 type: CARGO,
                                 startWithEmptyArr: false,
                                 queryParams: {
-                                  ...createQueryParamsFromFilter(
-                                    panes.find((x) => x.path === activePaneKey)
-                                      ?.filters
-                                  ),
+                                  ...createQueryParamsFromFilter(panes.find((x) => x.path === activePaneKey)?.filters),
                                   next_cursor: cargo.data.cursor.next_cursor,
                                 },
                                 errorCallback: () => {
-                                  message.error(
-                                    "Upss dogodila se greška kod dohvata podataka...",
-                                    6
-                                  );
+                                  message.error("Upss dogodila se greška kod dohvata podataka...", 6);
                                 },
                               });
                             }}
                           >
-                            <Translate textKey={"upload_butt"}  />  <br />
-                            <img
-                              src={loadMore}
-                              style={{ width: 24, height: 24, marginTop: -16 }}
-                            />
+                            <Translate textKey={"upload_butt"} /> <br />
+                            <img src={loadMore} style={{ width: 24, height: 24, marginTop: -16 }} />
                           </Button>
                         </div>
                       )
@@ -280,19 +253,12 @@ const Cargo = ({ cargo, panes, activePaneKey, currentUser, citiesFilter }) => {
                       }
                       return (
                         <div>
-                          <Card
-                            id={item.id}
-                            item={item}
-                            currentUser={currentUser}
-                          />
+                          <Card id={item.id} item={item} currentUser={currentUser} />
                         </div>
                       );
                     }}
                   />
-                  <CustomVerticalDevider
-                    height={45}
-                    bottomExtend={iOS() ? 145 : 0}
-                  />
+                  <CustomVerticalDevider height={45} bottomExtend={iOS() ? 145 : 0} />
                 </div>
               </Space>
             </Col>
