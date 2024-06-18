@@ -185,16 +185,6 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
     window.location.reload();
   }
 
-  const menu = (  
-    <Menu>
-      {prepare.data.languages.map((lang, i) => (
-        <Menu.Item onClick={() => setAppLanguage(lang)} key={i}>
-          <span>{getUnicodeFlagIcon(lang.alpha2Code === "EN" ? "GB" : lang.alpha2Code) + " "} <Translate textKey={lang.name}  /></span>
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
-
   // DOM
   const showBackButton =
     location != null &&
@@ -264,19 +254,6 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
          <Link style={{padding: 12, color: "white"}} to="/backoff/dashboard">Backoffice</Link>
         </div>}
 
-        {/* <div>
-          <Dropdown overlay={menu} placement="bottomCenter" arrow>
-            <Button type="ghost">
-              <div style={{ color: "#fff" }}>
-                {
-                 <Translate textKey={prepare.data.languages.find((x) => appLang === x.alpha2Code)
-                  ?.name || ""}/>
-                }
-              </div>
-            </Button>
-          </Dropdown>
-        </div> */}
-     
         <div>
           <Popconfirm
             title={<Translate textKey={"want_logout"}  />}
@@ -309,20 +286,6 @@ const App = ({ auth, getUser, prepare, appLang, currentUser }) => {
     return (
       <Layout>
         {/* Sider */}
-        <div style={{display: "flex", justifyContent: "flex-end", paddingTop: 12}} >
-          <div  style={{width: 100 }} > 
-          <Dropdown overlay={menu} placement="bottomCenter" arrow>
-            <Button type="ghost">
-              <div style={{ color: "#black" }}>
-                {
-                 <Translate textKey={prepare.data.languages.find((x) => appLang === x.alpha2Code)
-                  ?.name || ""}/>
-                }
-              </div>
-            </Button>
-          </Dropdown>
-        </div>
-      </div>
 
         {/* Content */}
         <Content

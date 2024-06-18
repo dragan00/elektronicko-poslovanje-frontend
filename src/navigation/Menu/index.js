@@ -13,33 +13,25 @@ import { colors } from "../../styles/colors";
 import { getFilesRoute } from "../../axios/endpoints";
 import { useDispatch, useSelector } from "react-redux";
 import Translate from "../../Translate";
-import getUnicodeFlagIcon from 'country-flag-icons/unicode'
+import getUnicodeFlagIcon from "country-flag-icons/unicode";
 import { SET_APP_LANG } from "../../redux/modules/User/actions";
 
 // Constants
 const { Item, SubMenu } = Menu;
 const rootSubmenuKeys = ["sub1", "sub2"];
 
-export default function MenuComponent({
-  device,
-  closeDrawer,
-  siderCollapsed,
-  setSiderCollapsed,
-}) {
+export default function MenuComponent({ device, closeDrawer, siderCollapsed, setSiderCollapsed }) {
   // Variables
   const history = useHistory();
   const location = useLocation();
   const currentPage = location.pathname.split("/")[1];
   const currentTab = location.pathname.split("/")[2];
   const defaultMenuKey = `/${currentPage}`;
-  const company = useSelector((state) => state.User.user.data.account.company);   
-  const [openKeys, setOpenKeys] = useState([
-    currentPage === "routes" ? "sub1" : "sub2",
-  ]);
+  const company = useSelector((state) => state.User.user.data.account.company);
+  const [openKeys, setOpenKeys] = useState([currentPage === "routes" ? "sub1" : "sub2"]);
 
-  const  prepare = useSelector(state => state.User.prepare);
-  const  appLang = useSelector(state => state.User.appLang);
-
+  const prepare = useSelector((state) => state.User.prepare);
+  const appLang = useSelector((state) => state.User.appLang);
 
   const dispatch = useDispatch();
 
@@ -64,16 +56,6 @@ export default function MenuComponent({
     }
   };
 
-
-  const menu = (
-    <Menu>
-      {prepare.data.languages.map((lang, i) => (
-        <Menu.Item onClick={() => setAppLanguage(lang)} key={i}>
-          <span>{getUnicodeFlagIcon(lang.alpha2Code === "EN" ? "GB" : lang.alpha2Code) + " " } <Translate textKey={lang.name} /></span>
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
 
   return (
     <Menu
@@ -103,30 +85,19 @@ export default function MenuComponent({
       {device === "desktop"
         ? ROUTES.map((item) => (
             // Menu item
-            <Item
-              key={item.pathname}
-              title={item.title}
-              className={styles.menuStyle}
-            >
+            <Item key={item.pathname} title={item.title} className={styles.menuStyle}>
               {/* Link to route */}
               <Link to={item.pathname} className={styles.linkStyle}>
                 {/* Route icon */}
                 <img
-                  src={
-                    defaultMenuKey === item.pathname
-                      ? item.active_icon
-                      : item.icon
-                  }
+                  src={defaultMenuKey === item.pathname ? item.active_icon : item.icon}
                   alt={item.title}
                   className={styles.siderIcon}
                 />
                 <h2
                   className={styles.routeName}
                   style={{
-                    color:
-                      defaultMenuKey === item.pathname
-                        ? colors.black
-                        : colors.grey,
+                    color: defaultMenuKey === item.pathname ? colors.black : colors.grey,
                   }}
                 >
                   {item.title}
@@ -142,10 +113,7 @@ export default function MenuComponent({
                   <h2
                     className={styles.routeName}
                     style={{
-                      color:
-                        defaultMenuKey === item.pathname
-                          ? colors.black
-                          : colors.grey,
+                      color: defaultMenuKey === item.pathname ? colors.black : colors.grey,
                       marginLeft: 10,
                     }}
                   >
@@ -154,11 +122,7 @@ export default function MenuComponent({
                 }
                 icon={
                   <img
-                    src={
-                      defaultMenuKey === item.pathname
-                        ? item.active_icon
-                        : item.icon
-                    }
+                    src={defaultMenuKey === item.pathname ? item.active_icon : item.icon}
                     alt={item.title}
                     className={styles.siderIcon}
                     style={{ padding: 0 }}
@@ -174,16 +138,13 @@ export default function MenuComponent({
                 >
                   {item.sub_routes.map((sub_route) => (
                     <Button
-                      onClick={() =>
-                        handleNavigate(item.pathname, sub_route.pathname)
-                      }
+                      onClick={() => handleNavigate(item.pathname, sub_route.pathname)}
                       type="link"
                       to={sub_route.pathname}
                       style={{
                         textAlign: "left",
                         color:
-                          currentTab === sub_route.pathname &&
-                          defaultMenuKey === item.pathname
+                          currentTab === sub_route.pathname && defaultMenuKey === item.pathname
                             ? colors.purple
                             : colors.grey,
                         paddingLeft: 52,
@@ -197,31 +158,19 @@ export default function MenuComponent({
                 </div>
               </SubMenu>
             ) : (
-              <Item
-                key={item.pathname}
-                title={item.title}
-                className={styles.menuStyle}
-                onClick={closeDrawer}
-              >
+              <Item key={item.pathname} title={item.title} className={styles.menuStyle} onClick={closeDrawer}>
                 {/* Link to route */}
                 <Link to={item.pathname} className={styles.linkStyle}>
                   {/* Route icon */}
                   <img
-                    src={
-                      defaultMenuKey === item.pathname
-                        ? item.active_icon
-                        : item.icon
-                    }
+                    src={defaultMenuKey === item.pathname ? item.active_icon : item.icon}
                     alt={item.title}
                     className={styles.siderIcon}
                   />
                   <h2
                     className={styles.routeName}
                     style={{
-                      color:
-                        defaultMenuKey === item.pathname
-                          ? colors.black
-                          : colors.grey,
+                      color: defaultMenuKey === item.pathname ? colors.black : colors.grey,
                     }}
                   >
                     {item.title}
@@ -231,48 +180,24 @@ export default function MenuComponent({
             )
           )}
 
-
-    { device === "mobile" && <Item>
-        <div style={{paddingLeft: 24, marginTop: 3}} >
-        <Dropdown  overlay={menu} placement="bottomCenter" arrow>
-            <Button type="ghost">
-            <div style={{ color: "" }}>
-              {
-                <Translate textKey={prepare.data.languages.find((x) => appLang === x.alpha2Code)
-                  ?.name || ""}/>
-              }
-            </div>
-            </Button>
-        </Dropdown>
-        </div>
-      </Item>
-}
-
-
       <Item disabled style={{ flex: 1, cursor: "default" }} />
-
-    
-
 
       {device === "desktop" && (
         <Item disabled className={styles.expand}>
           <Tooltip
-            title={siderCollapsed ? <Translate textKey={"expand"}/> : <Translate textKey={"hide"}/>}
+            title={siderCollapsed ? <Translate textKey={"expand"} /> : <Translate textKey={"hide"} />}
             placement="topLeft"
           >
-            <div
-              className={styles.flexRow}
-              onClick={() => setSiderCollapsed((prevState) => !prevState)}
-            >
+            <div className={styles.flexRow} onClick={() => setSiderCollapsed((prevState) => !prevState)}>
               <Button
                 type="link"
                 shape="circle"
-                icon={
-                  siderCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
-                }
+                icon={siderCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 style={{ border: "1px solid #d9d9d9", color: colors.purple }}
               />
-              <h2 className={styles.companyName}><Translate textKey={"hide"} /></h2>
+              <h2 className={styles.companyName}>
+                <Translate textKey={"hide"} />
+              </h2>
             </div>
           </Tooltip>
         </Item>
@@ -289,11 +214,7 @@ export default function MenuComponent({
           <div>
             <Tooltip title={company.name} placement="topLeft">
               <div className={styles.avatarContainer}>
-                <img
-                  src={getFilesRoute() + company.avatar}
-                  alt=""
-                  className={styles.avatar}
-                />{" "}
+                <img src={getFilesRoute() + company.avatar} alt="" className={styles.avatar} />{" "}
                 <h2 className={styles.companyName}>{company.name}</h2>
               </div>
             </Tooltip>
