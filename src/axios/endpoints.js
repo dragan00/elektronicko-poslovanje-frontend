@@ -49,7 +49,7 @@ export const getFilesRoute = () => {
 
   // PRODUCTION
   else if (deploy === "PRODUCTION") {
-    return "";
+    return "https://fakultet.api.elektronickoposlovanje.neuros.hr/mediafiles/";
   }
 
   // DRAGAN
