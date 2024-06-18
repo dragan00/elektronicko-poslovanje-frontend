@@ -1,16 +1,16 @@
-import { Button, Col, Input, message, Modal, Row, Spin } from "antd";
-import React, { useState, useMemo } from "react";
+import { Button, Col, Input, message, Modal, Row, Space } from "antd";
+import React, { useMemo, useState } from "react";
 
+import { EditOutlined } from "@ant-design/icons";
 import { List } from "antd";
-import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
 import axios from "axios";
-import { getApiEndpoint } from "../../../../axios/endpoints";
+import VirtualList from "rc-virtual-list";
 import { unstable_batchedUpdates } from "react-dom";
-import AddForm from "./AddForm";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { getApiEndpoint } from "../../../../axios/endpoints";
 import Translate from "../../../../Translate";
-import VirtualList from 'rc-virtual-list';
+import AddForm from "./AddForm";
 const Places = () => {
   const history = useHistory();
 
@@ -26,10 +26,7 @@ const Places = () => {
   const [countrySearch, set_countrySearch] = useState("");
   const [citySearch, set_citySearch] = useState("");
   const [zipcodeSearch, set_zipcodeSearch] = useState("");
-const [ContainerHeight, set_ContainerHeight] = useState(400)
-
- 
-
+  const [ContainerHeight, set_ContainerHeight] = useState(400);
 
   const { countries } = useSelector((state) => state.User.prepare.data);
 
@@ -53,15 +50,10 @@ const [ContainerHeight, set_ContainerHeight] = useState(400)
       .catch((res) => {
         set_loading(false);
         if (res.response && res.response.status === 401) {
-          message.warning("Potrebna prijava...", 3, () =>
-            history.replace("/logout")
-          );
+          message.warning("Potrebna prijava...", 3, () => history.replace("/logout"));
           return;
         }
-        message.error(
-          "Dogodila se greška kod dohvata gradova, ponovo odabrati državu...",
-          6
-        );
+        message.error("Dogodila se greška kod dohvata gradova, ponovo odabrati državu...", 6);
       });
   };
 
@@ -71,15 +63,19 @@ const [ContainerHeight, set_ContainerHeight] = useState(400)
     () => (
       <List
         header={
-          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-          <div><Input.Search onChange={({target: {value}}) => set_countrySearch(value.toLowerCase())} /></div>
-          <div style={{ visibility: "hidden" }}>
-            
-            <Button> <Translate textKey={"add_butt"}  /></Button>{" "}
-          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <Input.Search onChange={({ target: { value } }) => set_countrySearch(value.toLowerCase())} />
+            </div>
+            <div style={{ visibility: "hidden" }}>
+              <Button>
+                {" "}
+                <Translate textKey={"add_butt"} />
+              </Button>{" "}
+            </div>
           </div>
         }
-        dataSource={countrySearch ?  countries.filter(x => x.name.toLowerCase().includes(countrySearch)) : countries}
+        dataSource={countrySearch ? countries.filter((x) => x.name.toLowerCase().includes(countrySearch)) : countries}
         renderItem={(item) => (
           <List.Item
             actions={[
@@ -91,7 +87,7 @@ const [ContainerHeight, set_ContainerHeight] = useState(400)
                 }}
                 type={"primary"}
               >
-                <Translate textKey={"cities"}  />
+                <Translate textKey={"cities"} />
               </Button>,
             ]}
           >
@@ -103,122 +99,62 @@ const [ContainerHeight, set_ContainerHeight] = useState(400)
     [countries, loading, countrySearch]
   );
 
-  const onDelete = async (type, id) => {
-    set_loadingDelete(true);
-    const token = await localStorage.getItem("token");
-
-    let request = {
-      name: null,
-      endpoint: "",
-      requestMethod: "",
-    };
-    if (type === "zip_code") {
-      request = {
-        data: { is_active: false },
-        endpoint: `${getApiEndpoint()}transport/zip_codes/${id}/`,
-        requestMethod: "patch",
-      };
-    } else {
-      request = {
-        data: { is_active: false },
-        endpoint: `${getApiEndpoint()}transport/cities/${id}/`,
-        requestMethod: "patch",
-      };
-    }
-
-    axios[request.requestMethod](request.endpoint, request.data, {
-      headers: {
-        Authorization: "Token " + token,
-      },
-    })
-      .then((res) => {
-        if (type === "zip_code") {
-          let index = zipCodes.findIndex((x) => x.id === id);
-          let arr = [...zipCodes];
-          arr.splice(index, 1);
-          set_zipCodes(arr);
-        } else {
-          let index = cities.findIndex((x) => x.id === id);
-          let arr = [...cities];
-          arr.splice(index, 1);
-          set_cities(arr);
+  const citiesMemo = useMemo(() => {
+    let filtredCitites = citySearch ? cities.filter((x) => x.name.toLowerCase().includes(citySearch)) : cities;
+    return (
+      <List
+        header={
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <Input.Search onChange={({ target: { value } }) => set_citySearch(value.toLowerCase())} />
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <Button
+                disabled={activeCountry.id === 0}
+                onClick={() => {
+                  set_modalVisible({ visible: true, adding: "city" });
+                }}
+              >
+                <Translate textKey={"add_butt"} />
+              </Button>
+            </div>
+          </div>
         }
-        set_loadingDelete(false);
-        false;
-      })
-      .catch((err) => {
-        set_loadingDelete(false);
-        false;
-        if (err.response && err.response.status === 401) {
-          message.warning("Potrebna prijava...", 3, () =>
-            history.replace("/backoff/signin")
-          );
-        } else {
-          message.error("Dogodila se greška kod spremanja podataka...");
-        }
-      });
-  };
-
-  
-
-  const citiesMemo = useMemo(
-    ()=>{
-      let filtredCitites = citySearch ?   cities.filter(x => x.name.toLowerCase().includes(citySearch)) : cities
-      return (
-      <List  header={
-        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-        <div><Input.Search onChange={({target: {value}}) => set_citySearch(value.toLowerCase())} /></div>
-        <div style={{ textAlign: "center" }}>
-          <Button
-            disabled={activeCountry.id === 0}
-            onClick={() => {
-              set_modalVisible({ visible: true, adding: "city" });
-            }}
-          >
-             <Translate textKey={"add_butt"}  />
-          </Button>
-        </div>
-        </div>
-      } >
-      <VirtualList
-      data={filtredCitites}
-      height={600}
-      itemHeight={47}
-      itemKey="id"
       >
-      { item => <List.Item
-            actions={[
-              <Button
-                onClick={() => {
-                  set_activeCity(item);
-                  set_cityId(item.id);
-                }}
-              >
-                Poštanski
-              </Button>,
-              <Button
-                onClick={() => {
-                  unstable_batchedUpdates(() => {
-                    set_update(item);
-                    set_modalVisible({ visible: true, adding: "city" });
-                  }, []);
-                }}
-              >
-                <EditOutlined />
-              </Button>,
-            ]}
-          >
-            <List.Item.Meta title={item.name} />
-          </List.Item> 
-    }
+        <VirtualList data={filtredCitites} height={600} itemHeight={47} itemKey="id">
+          {(item) => (
+            <List.Item
+              actions={[
+                <Button
+                  onClick={() => {
+                    set_activeCity(item);
+                    set_cityId(item.id);
+                  }}
+                >
+                  Poštanski
+                </Button>,
+                <Button
+                  onClick={() => {
+                    unstable_batchedUpdates(() => {
+                      set_update(item);
+                      set_modalVisible({ visible: true, adding: "city" });
+                    }, []);
+                  }}
+                >
+                  <EditOutlined />
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta title={item.name} />
+            </List.Item>
+          )}
         </VirtualList>
-        </List>
-    )},
-    [cities, citySearch]
-  );
+      </List>
+    );
+  }, [cities, citySearch]);
   return (
     <div style={{ padding: 27 }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      {/* <div style={{ display: "flex", justifyContent: "center" }}>
         <div>
           <span>
             <Translate textKey={"country"} />
@@ -230,7 +166,20 @@ const [ContainerHeight, set_ContainerHeight] = useState(400)
           </span>
           {loadingDelete && <Spin />}
         </div>
-      </div>
+      </div> */}
+      <Row>
+        <Col style={{ padding: "0 12px" }} span={8}>
+          <Space>
+            <Translate textKey={"country"} />
+            <Space style={{ fontWeight: "bold" }}>{activeCountry.name}</Space>
+          </Space>
+        </Col>
+        <Col style={{ padding: "0 12px" }} Space={8}>
+          <Space>
+            <Translate textKey={"city"} /> <Space style={{ fontWeight: "bold" }}>{activeCity.name}</Space>
+          </Space>
+        </Col>
+      </Row>
       <Row>
         <Col style={{ padding: "0 12px" }} span={8}>
           {countriesMemo}
@@ -242,9 +191,9 @@ const [ContainerHeight, set_ContainerHeight] = useState(400)
           {" "}
           <List
             header={
-              <div style={{display: "flex", justifyContent: "space-between", justifyItems: "center"}}>
+              <div style={{ display: "flex", justifyContent: "space-between", justifyItems: "center" }}>
                 <div>
-                  <Input.Search onChange={({target: {value}}) => set_zipcodeSearch(value.toLowerCase())}  />
+                  <Input.Search onChange={({ target: { value } }) => set_zipcodeSearch(value.toLowerCase())} />
                 </div>
                 <Button
                   disabled={activeCity.id === 0}
@@ -252,11 +201,13 @@ const [ContainerHeight, set_ContainerHeight] = useState(400)
                     set_modalVisible({ visible: true, adding: "zip_code" });
                   }}
                 >
-                   <Translate textKey={"add_butt"}  />
+                  <Translate textKey={"add_butt"} />
                 </Button>
               </div>
             }
-            dataSource={zipcodeSearch ? _zipCodes.filter(x => x.name.toLowerCase().includes(zipcodeSearch)) : _zipCodes}
+            dataSource={
+              zipcodeSearch ? _zipCodes.filter((x) => x.name.toLowerCase().includes(zipcodeSearch)) : _zipCodes
+            }
             renderItem={(item) => (
               <List.Item
                 actions={[
